@@ -17,3 +17,11 @@ def clear_screen():
 
 def get_terminal_size():
     return os.get_terminal_size()
+
+def find_sample_nmap_file():
+    scans_dir = os.path.join(os.path.dirname(__file__), 'scans')
+    for root, dirs, files in os.walk(scans_dir):
+        for file in files:
+            if file.endswith('.xml'):
+                return os.path.join(root, file)
+    return None

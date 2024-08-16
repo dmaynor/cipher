@@ -7,7 +7,7 @@ import sys
 from theme import Theme
 from mechanics import GameMechanics
 from level import Level
-from utilities import detect_os, clear_screen, get_terminal_size
+from utilities import detect_os, clear_screen, get_terminal_size, find_sample_nmap_file
 from nmap_parser import parse_nmap_xml, generate_seed_from_host, get_level_parameters
 
 class Game:
@@ -24,8 +24,11 @@ class Game:
         with open('cipher_game_settings.json', 'r') as f:
             self.settings = json.load(f)
 
-    def generate_levels_from_nmap(self, nmap_file):
+    def generate_levels_from_nmap(self, nmap_file=None):
         try:
+            if nmap_file is None:
+                nmap_file = find_sample_nmap_file()
+
             hosts = parse_nmap_xml(nmap_file)
             if not hosts or len(hosts) == 0:
                 print("No hosts found in the nmap scan file. Please check the file and try again.")
@@ -121,7 +124,7 @@ class Game:
     def start(self):
         print(f"Welcome to CIPHER - Running on {self.os_type.capitalize()}")
         while True:
-            nmap_file = input("Enter the path to the nmap XML file: ")
+            nmap_file = find_sample_nmap_file()
             if self.generate_levels_from_nmap(nmap_file):
                 break
             else:
